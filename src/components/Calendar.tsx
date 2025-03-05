@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { DayDetails } from "../types"
 import DayPopup from "./DayPopup"
 import { formatDate } from "../lib/utils"
+import DuaPopup from "./DuaPopup"
 
 interface CalendarProps {
 	selectedDay: DayDetails | null
@@ -12,6 +13,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDay, setSelectedDay }) => {
 	const startDate = new Date("2025-03-01")
 	const currentDate = new Date("2025-02-26")
 	const [days, setDays] = useState<DayDetails[]>([])
+	const [showDua, setShowDua] = useState(false)
 
 	useEffect(() => {
 		const generateDays = () => {
@@ -43,20 +45,28 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDay, setSelectedDay }) => {
 	const emptyCells = Array(firstDayIndex).fill(null)
 
 	return (
-		<div className="w-full max-w-4xl font-mono">
+		<div className="w-full max-w-4xl">
 			<div className="print:hidden">
-				<button
-					onClick={handlePrint}
-					className="mb-8 bg-black text-white px-6 py-3 font-mono uppercase hover:bg-blue-400 hover:text-black border-2 border-black"
-				>
-					Print Calendar
-				</button>
+				<div className="flex justify-end gap-2">
+					<button
+						onClick={() => setShowDua(!showDua)}
+						className="mb-4 bg-gray-200 px-6 py-3 rounded-md uppercase hover:bg-blue-400 hover:text-black"
+					>
+						Du'as
+					</button>
+					<button
+						onClick={handlePrint}
+						className="mb-4 bg-gray-200 px-6 py-3 rounded-md uppercase hover:bg-blue-400 hover:text-black"
+					>
+						Print Calendar
+					</button>
+				</div>
 
-				<div className="grid grid-cols-7 mb-2" id="calendar-grid">
+				<div className="grid grid-cols-7 mb-2 gap-2" id="calendar-grid">
 					{weekdays.map((day, index) => (
 						<div
 							key={index}
-							className="p-4 text-center font-bold bg-black text-white"
+							className="p-4 text-center font-bold bg-black text-white rounded-md"
 						>
 							{day}
 						</div>
@@ -65,13 +75,14 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDay, setSelectedDay }) => {
 					{emptyCells.map((_, index) => (
 						<div
 							key={`empty-${index}`}
-							className="p-4 bg-gray-100 border-2 border-gray-100"
+							className="p-4 border-2 border-gray-100 rounded-md"
 						/>
 					))}
 					{days.map((day) => {
 						const isPast = day.date < currentDate
 						const isToday =
-							day.date.toDateString() === currentDate.toDateString()
+							day.date.toDateString() === new Date().toDateString()
+						console.log(day.date.toDateString(), new Date().toDateString())
 						const dayOfWeek = day.date.getDay()
 						const isFriday = dayOfWeek === 5
 						const isSunday = dayOfWeek === 0
@@ -79,19 +90,19 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDay, setSelectedDay }) => {
 						return (
 							<div
 								key={day.dayNumber}
-								className={`p-4 text-center cursor-pointer transition-colors border-2 border-transparent
+								className={`p-4 text-center cursor-pointer transition-colors border-2 rounded-md
                   ${
 										isPast
 											? "bg-gray-300 text-gray-600 border-gray-400"
-											: "bg-white border-black"
+											: isToday
+											? "bg-purple-300 border-purple-300"
+											: "bg-gray-200 border-gray-200"
 									}
                   ${isToday ? "bg-blue-400 border-black" : ""}
-                  ${isFriday ? "bg-green-100 border-green-800" : ""}
-                  ${isSunday ? "bg-blue-100 border-blue-800" : ""} 
-                  hover:bg-blue-200 hover:border-blue-400`}
+                  hover:bg-purple-200 hover:border-purple-200`}
 								onClick={() => handleDayClick(day)}
 							>
-								<p className="font-bold text-xl">DAY {day.dayNumber}</p>
+								<p className="font-bold text-xl">{day.dayNumber}</p>
 								<p className="uppercase">
 									{formatDate(day.date).split(",")[0]}
 								</p>
@@ -101,7 +112,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDay, setSelectedDay }) => {
 					{emptyCells.map((_, index) => (
 						<div
 							key={`empty-${index}`}
-							className="p-4 bg-gray-100 border-2 border-gray-100"
+							className="p-4 border-2 border-gray-100 rounded-md"
 						/>
 					))}
 				</div>
@@ -135,7 +146,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDay, setSelectedDay }) => {
                   ${isFriday ? "bg-green-100" : ""}
                   ${isSunday ? "bg-blue-100" : ""}`}
 							>
-								<p className="font-bold">DAY {day.dayNumber}</p>
+								<p className="font-bold">{day.dayNumber}</p>
 								<p className="uppercase">{formatDate(day.date)}</p>
 							</div>
 						)
@@ -152,6 +163,8 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDay, setSelectedDay }) => {
 			{selectedDay && (
 				<DayPopup day={selectedDay} onClose={() => setSelectedDay(null)} />
 			)}
+
+			{showDua && <DuaPopup state={showDua} setState={setShowDua} />}
 		</div>
 	)
 }

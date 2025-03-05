@@ -11,7 +11,7 @@ interface DayPopupProps {
 const DayPopup: React.FC<DayPopupProps> = ({ day, onClose }) => {
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-			<div className="bg-white p-8 border-2 border-black font-mono max-w-xl w-full relative overflow-hidden">
+			<div className="bg-white p-8 border-2 border-black max-w-xl w-full relative overflow-hidden">
 				<h2 className="text-2xl font-bold mb-6 uppercase">
 					RAMADAN DAY {day.dayNumber}
 				</h2>
