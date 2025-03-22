@@ -44,7 +44,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
 			{/* Main Content */}
 			<main className="flex-grow p-4 flex justify-center">
-				<div className="w-full max-w-4xl">{children}</div>
+				<div className="w-full">{children}</div>
 			</main>
 
 			{/* Brutalist Footer - will be hidden during print */}
