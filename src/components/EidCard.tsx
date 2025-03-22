@@ -20,12 +20,12 @@ const EidCardGenerator = () => {
 		message: "#000",
 	})
 
-	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageUpload = (e: any) => {
 		const file = e.target.files[0]
 		if (file && file.type.match("image.*")) {
 			const reader = new FileReader()
 			reader.onload = (event) => {
-				setBackgroundImage(event.target.result)
+				setBackgroundImage(event?.target?.result as any)
 			}
 			reader.readAsDataURL(file)
 		}
@@ -38,9 +38,9 @@ const EidCardGenerator = () => {
 		setDragOffset({ x: offsetX, y: offsetY })
 	}
 
-	const handleMouseMove = (e) => {
+	const handleMouseMove = (e: any) => {
 		if (isDragging && cardRef.current) {
-			const rect = cardRef.current.getBoundingClientRect()
+			const rect = (cardRef.current as any).getBoundingClientRect()
 			const newX = Math.min(Math.max(e.clientX - dragOffset.x, 0), rect.width)
 			const newY = Math.min(Math.max(e.clientY - dragOffset.y, 0), rect.height)
 			setNamePosition({ x: newX, y: newY })
@@ -56,7 +56,7 @@ const EidCardGenerator = () => {
 
 		import("html-to-image").then((htmlToImage) => {
 			htmlToImage
-				.toPng(cardRef.current)
+				.toPng(cardRef.current as any)
 				.then((dataUrl) => {
 					const link = document.createElement("a")
 					link.download = `eid-card-${message.replace(/\s+/g, "-")}.png`
